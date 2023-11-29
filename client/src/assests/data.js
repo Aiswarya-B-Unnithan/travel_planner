@@ -3,7 +3,10 @@ export const user = {
   firstName: "Aiswarya",
   lastName: "Chippy",
   profession:"Mern Developer",
-  email: "codewavewithasante@gmail.com",
+  email: "aishu@gmail.com",
+  location:"Arusha",
+  TravelPreference:"Hiking",
+  Events:[],
   friends: [
     {
       _id: "64df3aec4180b81adfe41d32",
