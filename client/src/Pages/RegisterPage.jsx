@@ -10,6 +10,7 @@ import CustomButton from "../components/CustomButton";
 import Loading from "../components/Loading";
 import TextInput from "../components/TextInput";
 import { BgImage } from "../assests";
+import { apiRequest } from "../utils";
 
 const Register = () => {
   const {
@@ -21,11 +22,34 @@ const Register = () => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data) => {};
-
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
+
+  const onSubmit = async (data) => {
+    console.log("data", data);
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: "http://localhost:8000/auth/register",
+        data: data,
+        method: "POST",
+      });
+      console.log("res from register", res);
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        setTimeout(() => {
+          window.location.replace("/login");
+        }, 5000);
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-bgColor w-full h-[100vh] flex items-center justify-center p-6">
@@ -36,7 +60,7 @@ const Register = () => {
             <div className="p-2 bg-[#065ad8] rounded text-white">
               <TbSocial />
             </div>
-            <span className="text-2xl text-[#065ad8] " font-semibold>
+            <span className="text-2xl text-[#065ad8] font-semibold">
               ShareFun
             </span>
           </div>

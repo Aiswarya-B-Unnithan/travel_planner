@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import TextInput from "./TextInput";
 import Loading from "./Loading";
 import CustomButton from "./CustomButton";
-import { UpdateProfile } from "../redux/userSlice";
+import { UpdateProfile, UserLogin } from "../redux/userSlice";
+import { apiRequest, handleFileUpload } from "../utils";
 
 const EditProfile = () => {
   const { user } = useSelector((state) => state.user);
@@ -23,15 +24,81 @@ const EditProfile = () => {
     defaultValues: { ...user },
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    console.log("dataaa",data)
+    console.log("picture",picture)
+    setIsSubmitting(true);
+    setErrMsg("");
+    try {
+      // const userString =  localStorage.getItem("user");
+
+      // // Parse the string as JSON
+      // const user =  await JSON.parse(userString);
+
+      // // Access the token property
+      // const token = user.token;
+
+      // const uri = picture && (await handleFileUpload(picture));
+      // console.log("uri", uri);
+      const {
+        firstName,
+        lastName,
+        location,
+        profession,
+        TravelPreference,
+        _id,
+      } = data;
+      const res = await apiRequest({
+        url: "http://localhost:8000/users/update-user",
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+        data: {
+          firstName,
+          lastName,
+          location,
+          profession,
+          TravelPreference,
+          profileUrl: picture,
+          userId: _id,
+        },
+
+        method: "PUT",
+        token: user?.token,
+      });
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        console.log("err", errMsg);
+        const newData = { token: res?.token, ...res?.user };
+        console.log("newdata", newData);
+        dispatch(UserLogin(newData));
+        setTimeout(() => {
+          dispatch(UpdateProfile(false));
+        }, 3000);
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
   const handleClose = () => {
     dispatch(UpdateProfile(false));
   };
   const handleSelect = (e) => {
-    setPicture(e.target.files[0]);
+   const { files } = e.target;
+   const file = files[0];
+   const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      
+      setPicture(result);
   };
-
+  }
   return (
     <>
       <div className="fixed z-50 inset-0 overflow-y-auto">

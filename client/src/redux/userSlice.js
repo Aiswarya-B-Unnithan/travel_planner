@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {user} from '../assests/data'
 const initialState = {
-  user: JSON.parse(window?.localStorage.getItem("user")) ?? user,
+  user: JSON.parse(window?.localStorage.getItem("user")) ?? {},
   edit: false,
 };
 const userSlice = createSlice({
@@ -11,6 +11,7 @@ const userSlice = createSlice({
     login: (state, action) => {
       state.user = action.payload;
       localStorage.setItem("user", JSON.stringify(action.payload));
+      
     },
     logOut: (state, action) => {
       state.user = null;

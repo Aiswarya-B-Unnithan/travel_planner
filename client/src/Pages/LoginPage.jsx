@@ -8,11 +8,17 @@ import { AiOutlineInteraction } from "react-icons/ai";
 import { ImConnection } from "react-icons/im";
 import CustomButton from "../components/CustomButton";
 import Loading from "../components/Loading";
-import TextInput from '../components/TextInput'
+import TextInput from "../components/TextInput";
 
-import { BgImage } from "../assests"
+import { BgImage } from "../assests";
+import { apiRequest } from "../utils";
+import { UserLogin } from "../redux/userSlice";
 
 const Login = () => {
+  const [errMsg, setErrMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -21,11 +27,33 @@ const Login = () => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: "http://localhost:8000/auth/login",
+        data: data,
+        method: "POST",
+      });
+      console.log("res from login", res);
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        console.log("err",errMsg)
+        const newData = { token: res?.token, ...res?.traveler };
 
-  const [errMsg, setErrMsg] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const dispatch = useDispatch();
+        console.log("newdata",newData)
+        dispatch(UserLogin(newData));
+          window.location.replace("/");
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="bg-bgColor w-full h-[100vh] flex items-center justify-center p-6">
       <div className="w-full md:w-2/3 h-fit lg:h-full 2xl:h-5/6 py-8 lg:py-0 flex bg-primary rounded-xl overflow-hidden shadow-xl">
@@ -126,7 +154,7 @@ const Login = () => {
           <div className="relative w-full flex items-center justify-center">
             <img
               src={BgImage}
-              alt="Bg Image"
+              alt="BgImage"
               className="w-48 2xl:w-64 h-48 2xl:h-64 rounded-full object-cover"
             />
 
