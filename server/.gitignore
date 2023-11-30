@@ -1,2 +1,7 @@
-.env 
-/node_modules
+# .gitignore
+
+# Ignore .env files
+.env
+
+# Ignore node_modules directory
+node_modules/
