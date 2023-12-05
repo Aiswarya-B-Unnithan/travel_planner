@@ -7,6 +7,7 @@ import path from "path";
 import dbConnection from "./dbConfig/config.js";
 import errorMiddleware from "../server/middleware/errorMiddleware.js";
 import cloudinary from "cloudinary";
+import cookieParser from "cookie-parser";
 //security packages
 import helmet from "helmet";
 import router from "./routes/index.js";
@@ -17,12 +18,13 @@ dotenv.config();
 const app = express();
 
 app.use(express.static(path.join(__dirname, "views/build")));
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 8000;
 dbConnection();
 
 //MIDDLEWARES
 app.use(helmet());
 app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));

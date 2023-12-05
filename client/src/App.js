@@ -6,6 +6,7 @@ import RegisterPage from "./Pages/RegisterPage";
 import ProfilePage from "./Pages/ProfilePage";
 import { useSelector } from "react-redux";
 
+
 function Layout() {
   const user = useSelector((state) => state.user);
   console.log("user", user.user.token);

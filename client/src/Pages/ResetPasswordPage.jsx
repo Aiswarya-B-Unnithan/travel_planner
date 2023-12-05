@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import TextInput from "../components/TextInput";
 import Loading from "../components/Loading";
 import CustomButton from "../components/CustomButton";
-
+import { apiRequest } from "../utils/index";
 const ResetPasswordPage = () => {
   const {
     register,
@@ -12,10 +12,27 @@ const ResetPasswordPage = () => {
   } = useForm({
     mode: "onChange",
   });
-
-  const onSubmit = async (data) => {};
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const onSubmit = async (data) => {
+    console.log(data);
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: "http://localhost:8800/users/request-passwordreset",
+        data: data,
+        method: "post",
+      });
+      if (res.success === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-full h-[100vh] bg-bgColor flex items-center justify-center p-6">
@@ -56,7 +73,7 @@ const ResetPasswordPage = () => {
             <CustomButton
               type="submit"
               containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`}
-              title="Create Account"
+              title="Submit"
             />
           )}
         </form>

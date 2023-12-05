@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { LiaEditSolid } from "react-icons/lia";
 import { SiYourtraveldottv } from "react-icons/si";
 import { MdOutlineEventNote } from "react-icons/md";
-import {CiLocationOn} from "react-icons/ci"
+import { CiLocationOn } from "react-icons/ci";
 import NoProfile from "../assests/userprofile.png";
 import { UpdateProfile } from "../redux/userSlice";
 import {
@@ -16,11 +16,13 @@ import {
 } from "react-icons/bs";
 import { FaTwitterSquare } from "react-icons/fa";
 import moment from "moment";
+
+
 const ProfileCard = ({ user }) => {
-  console.log("user",user)
+  console.log("user", user);
   const { user: data, edit } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-console.log("data",data._id)
+  console.log("data", data._id);
   return (
     <div>
       <div className="w-full bg-primary flex flex-col items-center shadow-sm rounded-xl px-6 py-4 ">
@@ -72,7 +74,7 @@ console.log("data",data._id)
           </div>
           <div className="flex gap-2 items-center text-ascent-2">
             <SiYourtraveldottv className=" text-lg text-ascent-1" />
-            <span>{user?.TravelPreference ?? "Add Profession"}</span>
+            <span>{user?.travelPreference ?? "Add TravelPreferences"}</span>
           </div>
           <div className="flex gap-2 items-center text-ascent-2">
             <MdOutlineEventNote className=" text-lg text-ascent-1" />

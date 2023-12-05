@@ -30,35 +30,24 @@ const EditProfile = () => {
     setIsSubmitting(true);
     setErrMsg("");
     try {
-      // const userString =  localStorage.getItem("user");
-
-      // // Parse the string as JSON
-      // const user =  await JSON.parse(userString);
-
-      // // Access the token property
-      // const token = user.token;
-
-      // const uri = picture && (await handleFileUpload(picture));
-      // console.log("uri", uri);
+      
       const {
         firstName,
         lastName,
         location,
         profession,
-        TravelPreference,
+        travelPreference,
         _id,
       } = data;
       const res = await apiRequest({
-        url: "http://localhost:8000/users/update-user",
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
+        url: "http://localhost:8800/users/update-user",
+
         data: {
           firstName,
           lastName,
           location,
           profession,
-          TravelPreference,
+          travelPreference,
           profileUrl: picture,
           userId: _id,
         },
@@ -67,6 +56,7 @@ const EditProfile = () => {
         token: user?.token,
       });
       if (res?.status === "failed") {
+        console.log(res)
         setErrMsg(res);
       } else {
         setErrMsg(res);
@@ -91,11 +81,12 @@ const EditProfile = () => {
   const handleSelect = (e) => {
    const { files } = e.target;
    const file = files[0];
+   console.log("file",file)
    const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       const result = reader.result;
-      
+      console.log("result", result);
       setPicture(result);
   };
   }
@@ -155,12 +146,12 @@ const EditProfile = () => {
 
               <TextInput
                 name="profession"
-                label="Profession"
-                placeholder="Profession"
+                label="profession"
+                placeholder="profession"
                 type="text"
                 styles="w-full"
                 register={register("profession", {
-                  required: "Profession is required!",
+                  required: "profession is required!",
                 })}
                 error={errors.profession ? errors.profession?.message : ""}
               />
@@ -176,12 +167,12 @@ const EditProfile = () => {
                 error={errors.location ? errors.location?.message : ""}
               />
               <TextInput
-                label="prefernce"
-                placeholder="prefernce"
+                label="travelPreference"
+                placeholder="travelPreference"
                 type="text"
                 styles="w-full"
-                register={register("TravelPreference", {
-                  required: "TravelPreference do not match",
+                register={register("travelPreference", {
+                  required: "travelPreference do not match",
                 })}
                 error={
                   errors.TravelPreference

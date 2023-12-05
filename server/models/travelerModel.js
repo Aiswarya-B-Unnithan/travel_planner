@@ -1,6 +1,20 @@
 import mongoose, { Schema } from "mongoose";
 //schema
+function passwordValidator() {
+  const isGoogleAuth = this.isGoogleAuth || false;
 
+  // Check if the document is being updated and isGoogleAuth is false
+  if (
+    !this.isNew &&
+    !isGoogleAuth &&
+    (!this.password || this.password.length < 6)
+  ) {
+    this.invalidate(
+      "password",
+      "Password is required and should be at least 6 characters long."
+    );
+  }
+}
 const travelerSchema = new mongoose.Schema(
   {
     firstName: {
@@ -18,10 +32,14 @@ const travelerSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Paswword Is Required"],
-      minLength: [6, "Password length should be greater than 6 characters"],
       select: true,
+      validate: {
+        validator: passwordValidator,
+        message:
+          "Custom password validation failed. Password is required and should be at least 6 characters long.",
+      },
     },
+
     profileUrl: {
       type: String,
     },
@@ -71,7 +89,11 @@ const travelerSchema = new mongoose.Schema(
     //   ],
     //   default: [],
     // },
-    travelPreferences: {
+    travelPreference: {
+      type: String,
+      default: "",
+    },
+    profession: {
       type: String,
       default: "",
     },
@@ -87,7 +109,12 @@ const travelerSchema = new mongoose.Schema(
         },
       },
     ],
+    isGoogleAuth: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   { timestamps: true }
 );
 const Travelers = mongoose.model("Traveler", travelerSchema);

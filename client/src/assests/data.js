@@ -2,11 +2,11 @@ export const user = {
   _id: "64df3c064180b81adfe41d4b",
   firstName: "Aiswarya",
   lastName: "Chippy",
-  profession:"Mern Developer",
+  profession: "Mern Developer",
   email: "aishu@gmail.com",
-  location:"Arusha",
-  TravelPreference:"Hiking",
-  Events:[],
+  location: "Arusha",
+  TravelPreference: "Hiking",
+  Events: [],
   friends: [
     {
       _id: "64df3aec4180b81adfe41d32",
@@ -155,13 +155,15 @@ export const posts = [
       _id: "64df39704180b81adfe41d0b",
       firstName: "Chris",
       lastName: "Omar",
+
       profileUrl:
-        "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874454/samples/people/boy-snow-hoodie.jpg",
-      location: "New York, USA",
+        "https://www.goseewrite.com/wp-content/uploads/2010/08/4647_89653076655_665141655_2054876_7386553_n.jpg",
+      location: "Kilimanjaro, Tanzania",
     },
-    description: "Hello everyone, this is a new video. check it out. thank you",
+    description:
+      "Kilimanjaro is a mountain of contrasts and extremes. You ascent takes you from tropical rainforest to arctic conditions in just a few days and at higher altitudes, winter drives out summer every night. ",
     image:
-      "https://res.cloudinary.com/djs3wu5bg/image/upload/v1692597858/SOCIALMEDIA/hdahstpztt1fvobc13st.png",
+      "https://th.bing.com/th/id/R.7dac61008e881984cb63b1bd666d0ced?rik=lYKg9xdAY2fUtg&pid=ImgRaw&r=0",
     likes: ["64df3c064180b81adfe41d4b"],
     comments: [],
     createdAt: "2023-08-21T06:04:18.297Z",
@@ -172,8 +174,8 @@ export const posts = [
     _id: "64e1cdd64baffca670364c8c",
     userId: {
       _id: "64df39704180b81adfe41d0b",
-      firstName: "Love",
-      lastName: "Banks",
+      firstName: "John",
+      lastName: "Smith",
       profileUrl:
         "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874454/samples/people/boy-snow-hoodie.jpg",
       location: "Mumbai, India",
@@ -201,14 +203,14 @@ export const posts = [
     updatedAt: "2023-08-21T02:54:01.806Z",
     __v: 0,
     image:
-      "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874458/samples/imagecon-group.jpg",
+      "https://th.bing.com/th/id/R.1aa794361c3026b4846e761445470af9?rik=VdvU9Yj0hCmgiA&riu=http%3a%2f%2ffindingbeyond.com%2fapp%2fuploads%2f2020%2f07%2ftanzania-safari-quide-cover.jpg&ehk=4JvezkaAhy2Zc7zz%2bHJovh4GWZ87jD7EdVNwhDi1vt4%3d&risl=&pid=ImgRaw&r=0",
   },
   {
     _id: "64df43714a4c0d47b5369fef",
     userId: {
       _id: "64df3c064180b81adfe41d4b",
-      firstName: "Code",
-      lastName: "Wave",
+      firstName: "Teena",
+      lastName: "R",
       profileUrl:
         "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874454/samples/people/boy-snow-hoodie.jpg",
     },
@@ -224,18 +226,18 @@ export const posts = [
     _id: "64df42dc4a4c0d47b5369f8a",
     userId: {
       _id: "64df424b4a4c0d47b5369f65",
-      firstName: "User",
-      lastName: "One",
+      firstName: "Tonny",
+      lastName: "Mathew",
     },
     description:
-      " What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.  Why do we use it? It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text,",
+      " The second day of our safari took us to the Ngorongoro Crater (good luck pronouncing it). It was an incredibly overcast day so we literally couldn’t see a thing when driving down into the crater.",
     likes: ["64df424b4a4c0d47b5369f65"],
     comments: [],
     createdAt: "2023-08-18T10:07:24.023Z",
     updatedAt: "2023-08-18T10:11:00.348Z",
     __v: 0,
     image:
-      "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874457/samples/ecommerce/leather-bag-gray.jpg",
+      "https://th.bing.com/th/id/R.08c423eafcc9a411c58d5c8162d3e5b2?rik=RjeUQyHqgn6Txw&pid=ImgRaw&r=0",
   },
   {
     _id: "64df42b04a4c0d47b5369f77",
@@ -276,7 +278,7 @@ export const posts = [
       firstName: "Code",
       lastName: "Wave",
       profileUrl:
-        "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874454/samples/people/boy-snow-hoodie.jpg",
+        "https://th.bing.com/th/id/R.f4971c04d31b6cfeff5c3be30316edeb?rik=X4y9uNC9YSiCXQ&pid=ImgRaw&r=0",
     },
     description:
       "What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Why do we use it? It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, ",
@@ -294,7 +296,7 @@ export const posts = [
     updatedAt: "2023-08-21T03:36:36.745Z",
     __v: 0,
     image:
-      "https://res.cloudinary.com/djs3wu5bg/image/upload/v1683874455/samples/animals/three-dogs.jpg",
+      "https://th.bing.com/th/id/R.f4971c04d31b6cfeff5c3be30316edeb?rik=X4y9uNC9YSiCXQ&pid=ImgRaw&r=0",
   },
   {
     _id: "64df3ed06c2bd953c7b43172",
@@ -327,7 +329,7 @@ export const postComments = [
       lastName: "One",
     },
     postId: "64df3ef86c2bd953c7b43193",
-    comment: "hahahah",
+    comment: "Nice",
     from: "User One",
     likes: ["64df39704180b81adfe41d0b"],
     replies: [],
@@ -346,7 +348,7 @@ export const postComments = [
       location: "Mumbai, India",
     },
     postId: "64df3ef86c2bd953c7b43193",
-    comment: "i would like to have them in my house",
+    comment: "Really Good",
     from: "MTech Solutions",
     likes: ["64df39704180b81adfe41d0b"],
     replies: [],

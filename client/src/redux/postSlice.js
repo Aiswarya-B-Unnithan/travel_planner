@@ -5,11 +5,11 @@ const initialState={
 }
 
 const postSlice=createSlice({
-    name:"post",
+    name:"posts",
     initialState,
     reducers:{
         getPost:(state,action)=>{
-            state.post=action.payload
+            state.posts=action.payload
         }
     }
 })

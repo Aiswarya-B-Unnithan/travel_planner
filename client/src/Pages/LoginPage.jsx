@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { TbSocial } from "react-icons/tb";
 import { BsShare } from "react-icons/bs";
@@ -9,16 +9,79 @@ import { ImConnection } from "react-icons/im";
 import CustomButton from "../components/CustomButton";
 import Loading from "../components/Loading";
 import TextInput from "../components/TextInput";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
 
 import { BgImage } from "../assests";
-import { apiRequest } from "../utils";
+import { apiRequest, createOrGetUser } from "../utils";
 import { UserLogin } from "../redux/userSlice";
+import { CiLight } from "react-icons/ci";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("useEffect triggered with user:", user);
 
+    if (user && user.token) {
+      console.log("User is authenticated, navigating to /");
+      navigate("/");
+    } else {
+      console.log("User is not authenticated, navigating to /login");
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
+  const createOrGetUser = async (response) => {
+    const decode = jwtDecode(response.credential);
+    const {
+      given_name: firstName,
+      family_name: lastName,
+      email,
+      picture: profileUrl,
+      sub,
+    } = decode;
+    const newData = {
+      firstName,
+      lastName,
+      email,
+      profileUrl,
+      sub,
+      verified: true,
+      isGoogleAuth: true,
+    };
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: "http://localhost:8800/auth/loginWithGoogle",
+        data: newData,
+        method: "POST",
+      });
+      console.log("res from login", res);
+      if (res?.success === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        console.log("hello from sattus success");
+        console.log("err", errMsg);
+        const newData = {
+          token: res?.token,
+          ...res?.traveler,
+          refreshToken: res?.refreshToken,
+        };
+        console.log("newdata", newData);
+        dispatch(UserLogin(newData));
+        window.location.replace("/");
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
   const {
     register,
     handleSubmit,
@@ -31,21 +94,21 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const res = await apiRequest({
-        url: "http://localhost:8000/auth/login",
+        url: "http://localhost:8800/auth/login",
         data: data,
         method: "POST",
       });
       console.log("res from login", res);
-      if (res?.status === "failed") {
+      if (res?.success === "failed") {
         setErrMsg(res);
       } else {
         setErrMsg(res);
-        console.log("err",errMsg)
+        console.log("err", errMsg);
         const newData = { token: res?.token, ...res?.traveler };
 
-        console.log("newdata",newData)
+        console.log("newdata", newData);
         dispatch(UserLogin(newData));
-          window.location.replace("/");
+        window.location.replace("/");
       }
       setIsSubmitting(false);
     } catch (error) {
@@ -113,7 +176,7 @@ const Login = () => {
             {errMsg?.message && (
               <span
                 className={`text-sm ${
-                  errMsg?.status == "failed"
+                  errMsg?.status === "failed"
                     ? "text-[#f64949fe]"
                     : "text-[#2ba150fe]"
                 } mt-0.5`}
@@ -125,11 +188,18 @@ const Login = () => {
             {isSubmitting ? (
               <Loading />
             ) : (
-              <CustomButton
-                type="submit"
-                containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`}
-                title="Login"
-              />
+              <>
+                <CustomButton
+                  type="submit"
+                  containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`}
+                  title="Login"
+                />
+                <br />
+                <GoogleLogin
+                  onSuccess={(response) => createOrGetUser(response)}
+                  onError={(error) => console.log(error)}
+                />
+              </>
             )}
           </form>
 
@@ -142,12 +212,13 @@ const Login = () => {
               Create Account
             </Link>
           </p>
-          <Link
+
+          {/* <Link
             to="/googleSignUp"
             className="text-[#065ad8] font-semibold ml-2  text-center cursor-pointer"
           >
             SignUp With Google
-          </Link>
+          </Link> */}
         </div>
         {/* RIGHT */}
         <div className="hidden w-1/2 h-full lg:flex flex-col items-center justify-center bg-blue">

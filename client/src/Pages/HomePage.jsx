@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import TopBar from "../components/TopBar";
 import CustomButton from "../components/CustomButton";
 import Loading from "../components/Loading";
 import ProfileCard from "../components/ProfileCard";
 import FriendsCard from "../components/FriendsCard";
-import { friends, requests, suggest, posts } from "../assests/data";
+import { friends, requests, suggest,posts } from "../assests/data";
 import { Link } from "react-router-dom";
 import PostCard from "../components/PostCard";
 
@@ -16,9 +16,12 @@ import { BiImages, BiSolidVideo } from "react-icons/bi";
 import NoProfile from "../assests/userprofile.png";
 import TextInput from "../components/TextInput";
 import EditProfile from "../components/EditProfile";
+import { apiRequest, fetchPosts } from "../utils";
+import { SetPosts } from "../redux/postSlice";
 
 const HomePage = () => {
   const { user, edit } = useSelector((state) => state.user);
+  // const { posts } = useSelector((state) => state.posts);
   const [friendRequest, setFriendRequest] = useState(requests);
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
   const [errMsg, setErrMsg] = useState("");
@@ -26,15 +29,71 @@ const HomePage = () => {
   const [event, setEvent] = useState([]);
   const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useDispatch();
+  console.log(user._id);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const handlePostSubmit = async (data) => {};
+  const handleSelect = (e) => {
+    const { files } = e.target;
+    const file = files[0];
+    console.log("file", file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      console.log("result", result);
+      setFile(result);
+    };
+  };
 
+  const handlePostSubmit = async (data) => {
+    setPosting(true);
+    setErrMsg("");
+
+    console.log(data);
+    // console.log(file);
+    try {
+      const newData = { ...data, image: file,userId:user._id } 
+      const res = await apiRequest({
+        url: "http://localhost:8800/posts/createPost",
+        data: newData,
+        token: user?.token,
+        method: "POST",
+        
+      });
+      setPosting(false);
+      console.log(res);
+      if (res.status === "failed") {
+        setErrMsg(res);
+      } else {
+        dispatch(SetPosts(res.data))
+        reset({
+          description: "",
+        });
+        setFile(null);
+        setErrMsg("");
+        
+      }
+      setPosting(false);
+    } catch (error) {
+      console.log(error);
+      setPosting(false);
+    }
+  };
+  // const fetchPost = async (data) => {
+  //   await fetchPosts(user?.token, dispatch);
+  //   setPosting(false);
+  // };
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   fetchPost();
+  // }, []);
   return (
     <>
       <div className="w-full px-0 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden">
@@ -89,8 +148,11 @@ const HomePage = () => {
                 >
                   <input
                     type="file"
-                    onChange={(e) => setEvent()}
+                    onChange={(e) => handleSelect(e)}
                     className="hidden"
+                    id="imgUpload"
+                    data-max-size="5120"
+                    accept=".jpg, .png, .jpeg"
                   />
                   <BiImages />
                   <span>Image</span>
@@ -111,7 +173,6 @@ const HomePage = () => {
                   <BiSolidVideo />
                   <span>Video</span>
                 </label>
-
                 <label
                   className="flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer"
                   htmlFor="event"
@@ -127,7 +188,6 @@ const HomePage = () => {
                   <MdOutlineEventNote />
                   <span>Create Event</span>
                 </label>
-
                 <div>
                   {posting ? (
                     <Loading />

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { TbSocial } from "react-icons/tb";
 import { BsShare } from "react-icons/bs";
@@ -11,6 +11,9 @@ import Loading from "../components/Loading";
 import TextInput from "../components/TextInput";
 import { BgImage } from "../assests";
 import { apiRequest } from "../utils";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { UserLogin } from "../redux/userSlice";
 
 const Register = () => {
   const {
@@ -25,18 +28,60 @@ const Register = () => {
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
+const { user } = useSelector((state) => state.user);
+ const navigate = useNavigate();
+  
+  const createOrGetUser = async (response) => {
+    try {
+      const decode = jwtDecode(response.credential);
+      const {
+        given_name: firstName,
+        family_name: lastName,
+        email,
+        picture: profileUrl,
+        sub,
+      } = decode;
+      const newData = {
+        firstName,
+        lastName,
+        email,
+        profileUrl,
+        sub,
+        verified: true,
+      };
+      const res = await apiRequest({
+        url: "http://localhost:8800/auth/registerWithGoogle",
+        data: newData,
+        method: "POST",
+      });
+      console.log("res from register", res);
+      if (res?.success === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        const newUser = { token: res?.token, ...res?.traveler, verified: true };
+        console.log(newUser);
+        dispatch(UserLogin(newUser));
+        window.location.replace("/");
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     console.log("data", data);
     setIsSubmitting(true);
     try {
       const res = await apiRequest({
-        url: "http://localhost:8000/auth/register",
+        url: "http://localhost:8800/auth/register",
         data: data,
         method: "POST",
       });
       console.log("res from register", res);
-      if (res?.status === "failed") {
+      if (res?.success === "failed") {
         setErrMsg(res);
       } else {
         setErrMsg(res);
@@ -82,6 +127,10 @@ const Register = () => {
                 styles="w-full"
                 register={register("firstName", {
                   required: "First Name is required!",
+                  pattern: {
+                    value: /^[A-Za-z]+$/,
+                    message: "First Name should only contain letters.",
+                  },
                 })}
                 error={errors.firstName ? errors.firstName?.message : ""}
               />
@@ -92,7 +141,11 @@ const Register = () => {
                 type="lastName"
                 styles="w-full"
                 register={register("lastName", {
-                  required: "Last Name do no match",
+                  required: "Last Name is required",
+                  pattern: {
+                    value: /^[A-Za-z]+$/,
+                    message: "Last Name should only contain letters.",
+                  },
                 })}
                 error={errors.lastName ? errors.lastName?.message : ""}
               />
@@ -105,6 +158,10 @@ const Register = () => {
               type="email"
               register={register("email", {
                 required: "Email Address is required",
+                pattern: {
+                  value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/,
+                  message: "Enter a valid email address.",
+                },
               })}
               styles="w-full"
               error={errors.email ? errors.email.message : ""}
@@ -160,11 +217,18 @@ const Register = () => {
             {isSubmitting ? (
               <Loading />
             ) : (
-              <CustomButton
-                type="submit"
-                containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`}
-                title="Create Account"
-              />
+              <>
+                <CustomButton
+                  type="submit"
+                  containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`}
+                  title="Create Account"
+                />
+                <br />
+                <GoogleLogin
+                  onSuccess={(response) => createOrGetUser(response)}
+                  onError={(error) => console.log(error)}
+                />
+              </>
             )}
           </form>
 
@@ -177,19 +241,19 @@ const Register = () => {
               Login
             </Link>
           </p>
-          <Link
+          {/* <Link
             to="/googleSignUp"
             className="text-[#065ad8] font-semibold ml-2  text-center cursor-pointer"
           >
             SignUp With Google
-          </Link>
+          </Link> */}
         </div>
         {/* RIGHT */}
         <div className="hidden w-1/2 h-full lg:flex flex-col items-center justify-center bg-blue">
           <div className="relative w-full flex items-center justify-center">
             <img
               src={BgImage}
-              alt="Bg Image"
+              alt="BgImage"
               className="w-48 2xl:w-64 h-48 2xl:h-64 rounded-full object-cover"
             />
 
