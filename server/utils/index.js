@@ -18,6 +18,7 @@ export const createJwt = (id) => {
     expiresIn: "1d",
   });
 
+  
   const refreshToken = JWT.sign(
     { userId: id },
     process.env.REFRESH_TOKEN_SECRET_KEY,

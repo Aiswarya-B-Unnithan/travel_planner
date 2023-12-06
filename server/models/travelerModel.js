@@ -113,6 +113,10 @@ const travelerSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    Role: {
+      type: String,
+      default: "Traveler",
+    },
   },
 
   { timestamps: true }
